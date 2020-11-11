@@ -78,6 +78,7 @@
             <version>${nexus-version}</version>
         </dependency>
 
+        <!--
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-datastore-mybatis</artifactId>
@@ -85,6 +86,7 @@
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>
+         -->
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
