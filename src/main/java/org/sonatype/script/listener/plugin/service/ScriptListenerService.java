@@ -6,10 +6,9 @@ import org.sonatype.nexus.common.app.ManagedLifecycle;
 import org.sonatype.nexus.common.event.EventManager;
 import org.sonatype.nexus.common.script.ScriptService;
 import org.sonatype.nexus.script.Script;
-import org.sonatype.nexus.script.plugin.internal.ScriptStore;
 import org.sonatype.script.listener.plugin.dao.ScriptListenerData;
 import org.sonatype.script.listener.plugin.listeners.AScriptListener;
-import org.sonatype.script.listener.plugin.store.ScriptListenerStore;
+import org.sonatype.script.listener.plugin.store.ScriptListenerStoreImpl;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -32,34 +31,34 @@ public class ScriptListenerService {
 
     private final EventManager eventManager;
     private final ScriptService scriptService;
-    private final ScriptStore scriptStore;
-    private final ScriptListenerStore store;
+    private final ScriptListenerStoreImpl store;
     private final TreeMap<String, AScriptListener> map = new TreeMap<>();
 
 
     @Inject
-    public ScriptListenerService(EventManager eventManager, ScriptService scriptService, ScriptStore scriptStore,  ScriptListenerStore store) {
+    public ScriptListenerService(EventManager eventManager, ScriptService scriptService, ScriptListenerStoreImpl store) {
         this.eventManager = eventManager;
         this.scriptService = scriptService;
-        this.scriptStore = scriptStore;
         this.store = store;
     }
 
     @PostConstruct
     private void init() {
         log.info("Started ListenerService");
-        List<Script> scriptList = this.scriptStore.list();
-        scriptList.stream()
-                  .filter( script -> script.getType().equals(SCRIPT_TYPE))
-                  .forEach( script -> {
-                      try {
-                          if (initiateAndAddScript(script)) {
-                              log.info("Successfully added Listener. Script name {}", script.getName());
-                          }
-                      } catch(Exception ex) {
-                          log.error(ex.getMessage(),ex);
-                      }
-                  });
+        List<Script> scriptList = this.getScriptList();
+        if (null != scriptList) {
+            scriptList.stream()
+                    .filter(script -> script.getType().equals(SCRIPT_TYPE))
+                    .forEach(script -> {
+                        try {
+                            if (initiateAndAddScript(script)) {
+                                log.info("Successfully added Listener. Script name {}", script.getName());
+                            }
+                        } catch (Exception ex) {
+                            log.error(ex.getMessage(), ex);
+                        }
+                    });
+        }
     }
 
     public boolean removeListener(String type) {
@@ -71,7 +70,7 @@ public class ScriptListenerService {
     }
 
     public boolean addListener(String scriptName) {
-        Script script = scriptStore.get(scriptName);
+        Script script = getScriptByName(scriptName);
         return initiateAndAddScript(script);
     }
 
@@ -81,7 +80,11 @@ public class ScriptListenerService {
             ScriptListenerData data = new ScriptListenerData();
             data.setScriptname(scriptName);
             data.setEventtype(eventType);
-            store.create(data);
+            try {
+                store.create(data);
+            } catch (Exception ex) {
+                log.error(ex.getMessage(),ex);
+            }
         }
         return false;
     }
@@ -89,7 +92,6 @@ public class ScriptListenerService {
     private boolean initiateAndAddScript(Script script) {
         HashMap<String, Object> bindings = new HashMap<>();
         bindings.put("scriptService", scriptService);
-        bindings.put("scriptStore", scriptStore);
         bindings.put("listenerStore", store);
         if (null != script && script.getType().equals(SCRIPT_TYPE)) {
             try {
@@ -108,10 +110,46 @@ public class ScriptListenerService {
     }
 
     private boolean validateScriptName(String scriptName) {
-        if (null != scriptStore.get(scriptName)) {
+        if (null != getScriptByName(scriptName)) {
             return true;
         }
         return false;
     }
 
+    private Script getScriptByName(String scriptName) {
+        try {
+            HashMap<String, Object> customBindings = new HashMap<>();
+            customBindings.put("scriptName", scriptName);
+            String scriptContent = "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStoreImpl\");\n" +
+                    "Script result = service.get(scriptName);\n" +
+                    "if (result) {\n" +
+                    "\treturn result;\n" +
+                    "}\n" +
+                    "return null;\n";
+            Script result = (Script) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
+            return result;
+        } catch(Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
+
+    private List<Script> getScriptList() {
+        try {
+            HashMap<String, Object> customBindings = new HashMap<>();
+            String scriptContent = "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStoreImpl\");\n" +
+                    "List<Script> result = service.list();\n" +
+                    "if (result) {\n" +
+                    "\treturn result;\n" +
+                    "}\n" +
+                    "return null;";
+            List<Script> result = (List<Script>) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
+            if (null != result) {
+                return result;
+            }
+        } catch(Exception ex) {
+            log.error(ex.getMessage(), ex);
+        }
+        return null;
+    }
 }

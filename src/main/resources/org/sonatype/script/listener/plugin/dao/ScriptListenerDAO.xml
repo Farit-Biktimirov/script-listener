@@ -18,29 +18,23 @@
 
     <insert id="createSchema">
     CREATE TABLE IF NOT EXISTS script_listener_bundling (
-      id          ${UUID_TYPE} NOT NULL,
       scriptname        VARCHAR(200) NOT NULL,
       eventtype        VARCHAR(200) NOT NULL
 
-      CONSTRAINT pk_script_listener_bundling_id PRIMARY KEY (id),
       CONSTRAINT pk_script_listener_bundling_name_event UNIQUE (scriptname, eventtype)
     );
   </insert>
 
-    <select id="browse" resultType="ScriptListenerData">
+  <select id="browse" resultType="ScriptListenerData">
     SELECT * FROM script_listener_bundling;
   </select>
 
-    <insert id="create" parameterType="ScriptListenerData">
-    INSERT INTO script_listener_bundling (id, scriptname, eventtype)
-        VALUES (#{id}, #{scriptname}, #{eventtype});
+  <insert id="create" parameterType="ScriptListenerData">
+    INSERT INTO script_listener_bundling (scriptname, eventtype)
+        VALUES (#{scriptname}, #{eventtype});
   </insert>
 
-    <select id="read" resultType="ScriptListenerData">
-    SELECT * FROM script_listener_bundling WHERE id = #{value};
-  </select>
-
-    <select id="readByEventType" resultType="ScriptListenerData">
+  <select id="readByEventType" resultType="ScriptListenerData">
     SELECT * FROM script_listener_bundling WHERE eventtype = #{value};
   </select>
 
@@ -48,11 +42,7 @@
     SELECT scriptname FROM script_listener_bundling WHERE eventtype = #{value};
   </select>
 
-    <delete id="delete">
-    DELETE FROM script_listener_bundling WHERE id = #{value};
-  </delete>
-
-    <delete id="deleteByScriptName">
+  <delete id="deleteByScriptName">
     DELETE FROM script_listener_bundling WHERE scriptname = #{value};
   </delete>
 

@@ -33,6 +33,8 @@ public class AddScriptListener implements EventAware {
         Script script = event.getScript();
         if (script.getType().equals(SCRIPT_TYPE) && scriptListenerService.addListener(script.getName())) {
             log.info("Successfully added Listener. Script name {}", script.getName());
+        } else {
+            log.info("Script Created Event was Caught {}", event.toString());
         }
     }
 

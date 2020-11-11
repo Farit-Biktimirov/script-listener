@@ -1,24 +1,9 @@
 package org.sonatype.script.listener.plugin.dao;
 
+public class ScriptListenerData{
 
-import org.sonatype.nexus.common.entity.EntityId;
-import org.sonatype.nexus.common.entity.HasEntityId;
-
-public class ScriptListenerData implements HasEntityId {
-
-    private EntityId id;
     private String scriptname;
     private String eventtype;
-
-    @Override
-    public EntityId getId() {
-        return null;
-    }
-
-    @Override
-    public void setId(EntityId entityId) {
-
-    }
 
     public String getScriptname() {
         return scriptname;
@@ -38,10 +23,8 @@ public class ScriptListenerData implements HasEntityId {
 
     @Override
     public int hashCode() {
-        if (id != null) {
-            return id.hashCode();
-        }
-            return super.hashCode();
+       String concat = this.eventtype.concat(this.scriptname);
+       return concat.hashCode();
     }
 
     @Override
@@ -52,9 +35,8 @@ public class ScriptListenerData implements HasEntityId {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        if (id != null) {
-            return id.equals(((ScriptListenerData) obj).getId());
-        }
-        return super.equals(obj);
+
+        return scriptname.equals(((ScriptListenerData) obj).getScriptname()) &&
+                    eventtype.equals(((ScriptListenerData) obj).getEventtype());
     }
 }

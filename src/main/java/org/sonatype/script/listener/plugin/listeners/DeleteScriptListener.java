@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonatype.nexus.common.event.EventAware;
 import org.sonatype.nexus.script.ScriptDeletedEvent;
-import org.sonatype.script.listener.plugin.store.ScriptListenerStore;
+import org.sonatype.script.listener.plugin.store.ScriptListenerStoreImpl;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -18,10 +18,10 @@ public class DeleteScriptListener implements EventAware {
 
     final Logger log = LoggerFactory.getLogger(DeleteScriptListener.class);
 
-    final ScriptListenerStore store;
+    final ScriptListenerStoreImpl store;
 
     @Inject
-    public DeleteScriptListener(ScriptListenerStore store) {
+    public DeleteScriptListener(ScriptListenerStoreImpl store) {
         this.store = store;
     }
 
@@ -30,6 +30,8 @@ public class DeleteScriptListener implements EventAware {
     public void on(ScriptDeletedEvent event) {
         if (store.deleteByScriptName(event.getScript().getName())) {
             log.info("Successfully deleted bond Script<->Event. Script name {}", event.getScript().getName());
+        } else {
+            log.info("Script Deleted Event was Caught {}", event.toString());
         }
     }
 

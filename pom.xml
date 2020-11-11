@@ -52,66 +52,64 @@
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-common</artifactId>
             <version>${nexus-version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-core</artifactId>
             <version>${nexus-version}</version>
+<!--            <scope>provided</scope>-->
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-datastore</artifactId>
             <version>${nexus-version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-datastore-api</artifactId>
             <version>${nexus-version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-datastore-mybatis</artifactId>
             <version>${nexus-version}</version>
-        </dependency>
-
-        <!--
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-datastore-mybatis</artifactId>
-            <version>${nexus-version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
-        </dependency>
-         -->
-
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-orient</artifactId>
-            <version>${nexus-version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-orient</artifactId>
             <version>${nexus-version}</version>
-            <classifier>features</classifier>
-            <type>xml</type>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-plugin-api</artifactId>
+            <version>${nexus-version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-script</artifactId>
             <version>${nexus-version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus.plugins</groupId>
             <artifactId>nexus-script-plugin</artifactId>
             <version>${nexus-version}</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
