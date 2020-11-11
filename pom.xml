@@ -62,34 +62,6 @@
 <!--            <scope>provided</scope>-->
         </dependency>
 
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-datastore</artifactId>
-            <version>${nexus-version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-datastore-api</artifactId>
-            <version>${nexus-version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-datastore-mybatis</artifactId>
-            <version>${nexus-version}</version>
-            <optional>true</optional>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.sonatype.nexus</groupId>
-            <artifactId>nexus-orient</artifactId>
-            <version>${nexus-version}</version>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
