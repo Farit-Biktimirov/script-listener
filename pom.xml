@@ -128,64 +128,6 @@
                 <groupId>org.apache.karaf.tooling</groupId>
                 <artifactId>karaf-maven-plugin</artifactId>
                 <version>4.3.0</version>
-              <!--  <configuration>
-                    <excludedArtifactIds>
-                        <id>org.osgi.core</id>
-                        <id>org.osgi.compendium</id>
-                        <id>osgi.core</id>
-                        <id>osgi.cmpn</id>
-                        <id>org.eclipse.osgi</id>
-                        <id>activation</id>
-                        <id>javax.annotation</id>
-                        <id>javax.annotation-api</id>
-                        <id>jboss-annotations-api_1.1_spec</id>
-                        <id>jboss-annotations-api_1.2_spec</id>
-                        <id>jboss-annotations-api_1.3_spec</id>
-                        <id>javax.inject</id>
-                        <id>aopalliance</id>
-                        <id>javax.ws.rs</id>
-                        <id>javax.ws.rs-api</id>
-                        <id>jakarta.xml.bind-api</id>
-                        <id>jakarta.activation</id>
-                        <id>jaxb-runtime</id>
-                        <id>txw2</id>
-                        <id>istack-commons-runtime</id>
-                        <id>jsr250-api</id>
-                        <id>jsr305</id>
-                        <id>slf4j-api</id>
-                        <id>jul-to-slf4j</id>
-                        <id>jcl-over-slf4j</id>
-                        <id>log4j-over-slf4j</id>
-                        <id>logback-core</id>
-                        <id>logback-classic</id>
-                        <id>jboss-logging</id>
-                        <id>bcprov-jdk15to18</id>
-                        <id>bcpkix-jdk15to18</id>
-                        <id>bcpg-jdk15to18</id>
-                        <id>directjngine</id>
-                        <id>validation-api</id>
-                        <id>jakarta.el</id>
-                        <id>jakarta.validation-api</id>
-                        <id>paranamer</id>
-                        <id>httpcore</id>
-                        <id>httpclient</id>
-                        <id>shiro-guice</id>
-                        <id>metrics-guice</id>
-                        <id>simpleclient_dropwizard</id>
-                        <id>quartz</id>
-                        <id>resteasy-jaxrs</id>
-                        <id>resteasy-atom-provider</id>
-                        <id>resteasy-jackson2-provider</id>
-                        <id>resteasy-jaxb-provider</id>
-                        <id>resteasy-multipart-provider</id>
-                        <id>resteasy-validator-provider</id>
-                        <id>resteasy-client</id>
-                        <id>jackson-coreutils</id>
-                        <id>json-patch</id>
-                        <id>swagger-core</id>
-                        <id>swagger-jaxrs</id>
-                    </excludedArtifactIds>
-                </configuration>-->
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
