@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <properties>
+        <nexus-version>3.28.1-01</nexus-version>
+    </properties>
+
+    <parent>
+        <groupId>org.sonatype.nexus.plugins</groupId>
+        <artifactId>nexus-plugins</artifactId>
+        <version>3.28.1-01</version>
+    </parent>
+
+    <artifactId>nexus-script-listener</artifactId>
+    <packaging>bundle</packaging>
+    <version>3.28.1-01</version>
+
+    <repositories>
+        <repository>
+            <id>rso-public-grid</id>
+            <url>https://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>rso-public-grid</id>
+            <url>https://repository.sonatype.org/content/groups/sonatype-public-grid/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-common</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-core</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-datastore</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-datastore-api</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-datastore-mybatis</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-datastore-mybatis</artifactId>
+            <version>${nexus-version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-orient</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-orient</artifactId>
+            <version>${nexus-version}</version>
+            <classifier>features</classifier>
+            <type>xml</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus</groupId>
+            <artifactId>nexus-script</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sonatype.nexus.plugins</groupId>
+            <artifactId>nexus-script-plugin</artifactId>
+            <version>${nexus-version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.karaf.tooling</groupId>
+                <artifactId>karaf-maven-plugin</artifactId>
+                <version>4.3.0</version>
+              <!--  <configuration>
+                    <excludedArtifactIds>
+                        <id>org.osgi.core</id>
+                        <id>org.osgi.compendium</id>
+                        <id>osgi.core</id>
+                        <id>osgi.cmpn</id>
+                        <id>org.eclipse.osgi</id>
+                        <id>activation</id>
+                        <id>javax.annotation</id>
+                        <id>javax.annotation-api</id>
+                        <id>jboss-annotations-api_1.1_spec</id>
+                        <id>jboss-annotations-api_1.2_spec</id>
+                        <id>jboss-annotations-api_1.3_spec</id>
+                        <id>javax.inject</id>
+                        <id>aopalliance</id>
+                        <id>javax.ws.rs</id>
+                        <id>javax.ws.rs-api</id>
+                        <id>jakarta.xml.bind-api</id>
+                        <id>jakarta.activation</id>
+                        <id>jaxb-runtime</id>
+                        <id>txw2</id>
+                        <id>istack-commons-runtime</id>
+                        <id>jsr250-api</id>
+                        <id>jsr305</id>
+                        <id>slf4j-api</id>
+                        <id>jul-to-slf4j</id>
+                        <id>jcl-over-slf4j</id>
+                        <id>log4j-over-slf4j</id>
+                        <id>logback-core</id>
+                        <id>logback-classic</id>
+                        <id>jboss-logging</id>
+                        <id>bcprov-jdk15to18</id>
+                        <id>bcpkix-jdk15to18</id>
+                        <id>bcpg-jdk15to18</id>
+                        <id>directjngine</id>
+                        <id>validation-api</id>
+                        <id>jakarta.el</id>
+                        <id>jakarta.validation-api</id>
+                        <id>paranamer</id>
+                        <id>httpcore</id>
+                        <id>httpclient</id>
+                        <id>shiro-guice</id>
+                        <id>metrics-guice</id>
+                        <id>simpleclient_dropwizard</id>
+                        <id>quartz</id>
+                        <id>resteasy-jaxrs</id>
+                        <id>resteasy-atom-provider</id>
+                        <id>resteasy-jackson2-provider</id>
+                        <id>resteasy-jaxb-provider</id>
+                        <id>resteasy-multipart-provider</id>
+                        <id>resteasy-validator-provider</id>
+                        <id>resteasy-client</id>
+                        <id>jackson-coreutils</id>
+                        <id>json-patch</id>
+                        <id>swagger-core</id>
+                        <id>swagger-jaxrs</id>
+                    </excludedArtifactIds>
+                </configuration>-->
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <version>5.1.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>biz.aQute.bnd</groupId>
+                        <artifactId>biz.aQute.bndlib</artifactId>
+                        <version>5.2.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+</project>
