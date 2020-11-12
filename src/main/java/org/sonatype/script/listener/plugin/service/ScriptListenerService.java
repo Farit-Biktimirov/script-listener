@@ -37,6 +37,7 @@ public class ScriptListenerService {
     public ScriptListenerService(EventManager eventManager, ScriptService scriptService) {
         this.eventManager = eventManager;
         this.scriptService = scriptService;
+        init();
     }
 
     @PostConstruct
@@ -50,6 +51,8 @@ public class ScriptListenerService {
                         try {
                             if (initiateAndAddScript(script.getName(), script)) {
                                 log.info("Successfully added Listener. Script name {}", script.getName());
+                            } else {
+                                log.warn("Failed to ADD listener {}", script.getName());
                             }
                         } catch (Exception ex) {
                             log.error(ex.getMessage(), ex);
@@ -112,12 +115,13 @@ public class ScriptListenerService {
         try {
             HashMap<String, Object> customBindings = new HashMap<>();
             customBindings.put("scriptName", scriptName);
-            String scriptContent = "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStoreImpl\");\n" +
-                    "Script result = service.get(scriptName);\n" +
+            String scriptContent = "import org.sonatype.nexus.script.Script;\n" +
+                    "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
+                    "Script result = service.get(\""+ scriptName + "\");\n" +
                     "if (result) {\n" +
                     "\treturn result;\n" +
                     "}\n" +
-                    "return null;\n";
+                    "return null;";
             Script result = (Script) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
             return result;
         } catch(Exception ex) {
@@ -129,7 +133,9 @@ public class ScriptListenerService {
     private List<Script> getScriptList() {
         try {
             HashMap<String, Object> customBindings = new HashMap<>();
-            String scriptContent = "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStoreImpl\");\n" +
+            String scriptContent = "import java.util.List;\n" +
+                    "import org.sonatype.nexus.script.Script;\n" +
+                    "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
                     "List<Script> result = service.list();\n" +
                     "if (result) {\n" +
                     "\treturn result;\n" +
