@@ -31,7 +31,7 @@ public class DeleteScriptListener implements EventAware {
         if (service.removeListener(event.getScript().getName())) {
             log.info("Successfully deleted bond Script<->Event. Script name {}", event.getScript().getName());
         } else {
-            log.info("Script Deleted Event was Caught {}", event.toString());
+            log.info("Script Deleted Event was Caught {}", event);
         }
     }
 

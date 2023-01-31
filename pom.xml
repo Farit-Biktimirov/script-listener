@@ -5,18 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-        <nexus-version>3.28.1-01</nexus-version>
+        <nexus-version>3.43.0-01</nexus-version>
     </properties>
 
     <parent>
         <groupId>org.sonatype.nexus.plugins</groupId>
         <artifactId>nexus-plugins</artifactId>
-        <version>3.28.1-01</version>
+        <version>3.43.0-01</version>
     </parent>
 
     <artifactId>nexus-script-listener</artifactId>
     <packaging>bundle</packaging>
-    <version>3.28.1-01</version>
+    <version>3.43.0-01</version>
 
     <repositories>
         <repository>
@@ -52,14 +52,14 @@
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-common</artifactId>
             <version>${nexus-version}</version>
-<!--            <scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.sonatype.nexus</groupId>
             <artifactId>nexus-core</artifactId>
             <version>${nexus-version}</version>
-<!--            <scope>provided</scope>-->
+            <scope>provided</scope>
         </dependency>
 
 
@@ -95,6 +95,11 @@
                     <source>1.8</source>
                     <target>1.8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.karaf.tooling</groupId>

@@ -2,16 +2,18 @@ package org.sonatype.script.listener.plugin.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.sonatype.goodies.lifecycle.LifecycleSupport;
 import org.sonatype.nexus.common.app.ManagedLifecycle;
 import org.sonatype.nexus.common.event.EventManager;
 import org.sonatype.nexus.common.script.ScriptService;
 import org.sonatype.nexus.script.Script;
+import org.sonatype.nexus.script.ScriptManager;
 import org.sonatype.script.listener.plugin.listeners.AScriptListener;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.TreeMap;
@@ -24,24 +26,24 @@ import static org.sonatype.script.listener.plugin.listeners.AddScriptListener.SC
 @Named
 @Singleton
 @ManagedLifecycle(phase = SERVICES)
-public class ScriptListenerService {
+public class ScriptListenerService extends LifecycleSupport {
 
     private final Logger log = LoggerFactory.getLogger(ScriptListenerService.class);
-
     private final EventManager eventManager;
     private final ScriptService scriptService;
+    private final ScriptManager scriptManager;
     private final TreeMap<String, AScriptListener> map = new TreeMap<>();
 
-
     @Inject
-    public ScriptListenerService(EventManager eventManager, ScriptService scriptService) {
+    public ScriptListenerService(EventManager eventManager, ScriptService scriptService, ScriptManager scriptManager) {
         this.eventManager = eventManager;
         this.scriptService = scriptService;
-        init();
+        this.scriptManager = scriptManager;
+        doStart();
     }
 
-    @PostConstruct
-    private void init() {
+    @Override
+    protected void doStart() {
         log.info("Started ListenerService");
         List<Script> scriptList = this.getScriptList();
         if (null != scriptList) {
@@ -60,6 +62,13 @@ public class ScriptListenerService {
                     });
         }
     }
+    @Override
+    protected void doStop() {
+        log.info("Start removing listeners");
+        map.values().stream().forEach( listener -> eventManager.unregister(listener));
+        log.info("Stop ListenerService");
+
+    }
 
     public boolean removeListener(String scriptName) {
         if (map.containsKey(scriptName)) {
@@ -69,7 +78,7 @@ public class ScriptListenerService {
         return false;
     }
 
-    public boolean removelistenerByType(final String type){
+    public boolean removelistenerByEventType(final String type){
         List<AScriptListener> list = map.entrySet().stream()
                 .map( e -> e.getValue())
                 .filter( aScriptListener -> aScriptListener.getType().equals(type))
@@ -105,15 +114,12 @@ public class ScriptListenerService {
     }
 
     private boolean validateScriptName(String scriptName) {
-        if (null != getScriptByName(scriptName)) {
-            return true;
-        }
-        return false;
+        return null != getScriptByName(scriptName);
     }
 
     private Script getScriptByName(String scriptName) {
         try {
-            HashMap<String, Object> customBindings = new HashMap<>();
+            /*HashMap<String, Object> customBindings = new HashMap<>();
             customBindings.put("scriptName", scriptName);
             String scriptContent = "import org.sonatype.nexus.script.Script;\n" +
                     "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
@@ -122,8 +128,8 @@ public class ScriptListenerService {
                     "\treturn result;\n" +
                     "}\n" +
                     "return null;";
-            Script result = (Script) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
-            return result;
+            Script result = (Script) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);*/
+            return scriptManager.get(scriptName);
         } catch(Exception ex) {
             log.error(ex.getMessage(), ex);
         }
@@ -132,7 +138,7 @@ public class ScriptListenerService {
 
     private List<Script> getScriptList() {
         try {
-            HashMap<String, Object> customBindings = new HashMap<>();
+            /*HashMap<String, Object> customBindings = new HashMap<>();
             String scriptContent = "import java.util.List;\n" +
                     "import org.sonatype.nexus.script.Script;\n" +
                     "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
@@ -140,10 +146,11 @@ public class ScriptListenerService {
                     "if (result) {\n" +
                     "\treturn result;\n" +
                     "}\n" +
-                    "return null;";
-            List<Script> result = (List<Script>) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
-            if (null != result) {
-                return result;
+                    "return null;";*/
+            final List<Script> result = new ArrayList<>();//(List<Script>) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
+            scriptManager.browse().forEach( script -> result.add(script));
+            if (!result.isEmpty()) {
+                return result.stream().filter( script -> script.getType().equals(SCRIPT_TYPE)).collect(Collectors.toList());
             }
         } catch(Exception ex) {
             log.error(ex.getMessage(), ex);
