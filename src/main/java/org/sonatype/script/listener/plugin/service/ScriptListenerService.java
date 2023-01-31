@@ -118,36 +118,12 @@ public class ScriptListenerService extends LifecycleSupport {
     }
 
     private Script getScriptByName(String scriptName) {
-        try {
-            /*HashMap<String, Object> customBindings = new HashMap<>();
-            customBindings.put("scriptName", scriptName);
-            String scriptContent = "import org.sonatype.nexus.script.Script;\n" +
-                    "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
-                    "Script result = service.get(\""+ scriptName + "\");\n" +
-                    "if (result) {\n" +
-                    "\treturn result;\n" +
-                    "}\n" +
-                    "return null;";
-            Script result = (Script) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);*/
-            return scriptManager.get(scriptName);
-        } catch(Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
-        return null;
+         return scriptManager.get(scriptName);
     }
 
     private List<Script> getScriptList() {
         try {
-            /*HashMap<String, Object> customBindings = new HashMap<>();
-            String scriptContent = "import java.util.List;\n" +
-                    "import org.sonatype.nexus.script.Script;\n" +
-                    "def service = container.lookup(\"org.sonatype.nexus.script.plugin.internal.ScriptStore\");\n" +
-                    "List<Script> result = service.list();\n" +
-                    "if (result) {\n" +
-                    "\treturn result;\n" +
-                    "}\n" +
-                    "return null;";*/
-            final List<Script> result = new ArrayList<>();//(List<Script>) scriptService.eval(DEFAULT_LANGUAGE, scriptContent, customBindings);
+            final List<Script> result = new ArrayList<>();
             scriptManager.browse().forEach( script -> result.add(script));
             if (!result.isEmpty()) {
                 return result.stream().filter( script -> script.getType().equals(SCRIPT_TYPE)).collect(Collectors.toList());
